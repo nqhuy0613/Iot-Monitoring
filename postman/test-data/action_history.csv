@@ -1,0 +1,4 @@
+id,user_id,device_id,action,status,created_at
+1,1,1,ON,ON,2026-08-15 11:20:30
+2,1,1,OFF,OFF,2026-08-15 11:30:00
+3,2,2,ON,FAILED,2026-08-16 09:10:00

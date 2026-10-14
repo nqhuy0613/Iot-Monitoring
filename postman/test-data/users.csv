@@ -1,0 +1,3 @@
+id,username,password,full_name,created_at
+1,testuser,$2a$10$.Rh6rGGz32vjl5.2ubvX.uNqHIt/i0DQwXjEaslexSLJzeke/p1He,Nguyen An,2026-08-01 08:00:00
+2,operator,$2a$10$.Rh6rGGz32vjl5.2ubvX.uNqHIt/i0DQwXjEaslexSLJzeke/p1He,Tran Binh,2026-08-01 08:05:00

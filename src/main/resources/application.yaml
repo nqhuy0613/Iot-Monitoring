@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: iot-monitoring
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/iot_monitoring
+    username: root
+    password: 123456
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+mqtt:
+  enabled: true
+  broker-url: tcp://localhost:1000
+  client-id: iot-monitoring-backend
+  sensor-topic: iot/sensors/data
+  device-command-topic: iot/devices/command
+  device-status-topic: iot/devices/status
+  username: "huy123"
+  password: "123123"
+
+device:
+  control-timeout-seconds: 5
+
+security:
+  jwt:
+    issuer: http://iot-monitoring.local
+    secret: ${JWT_SECRET:iot-monitoring-development-secret-key-change-me}
+    expiration-seconds: ${JWT_EXPIRATION_SECONDS:28800}
+
+app:
+  cors:
+    allowed-origin-pattern: ${FRONTEND_ORIGIN_PATTERN:http://localhost:*}
+
+server:
+  port: 8888
+

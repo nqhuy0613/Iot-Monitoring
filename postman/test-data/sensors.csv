@@ -1,0 +1,4 @@
+id,name,type,created_at
+1,Temperature Sensor,TEMPERATURE,2026-08-01 08:00:00
+2,Humidity Sensor,HUMIDITY,2026-08-01 08:00:00
+3,Light Sensor,LIGHT,2026-08-01 08:00:00

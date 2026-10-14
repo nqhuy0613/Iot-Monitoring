@@ -1,0 +1,815 @@
+{
+  "info": {
+    "_postman_id": "a129cf34-90f0-4f11-8792-09b15843fc93",
+    "name": "IoT Monitoring Backend",
+    "description": "Collection kiểm thử các REST API của dự án IoT Monitoring. Chạy request Login, sao chép token nhận được và dán vào Authorization > Bearer Token của collection trước khi chạy các request còn lại.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "PASTE_ACCESS_TOKEN_HERE",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"test123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8888/api/auth/login",
+              "host": [
+                "http://localhost:8888"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Đăng nhập bằng tài khoản mẫu. Sau khi nhận response, sao chép token và dán vào Authorization > Bearer Token của collection."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response contains token and user', function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.token).to.be.a('string').and.not.empty;",
+                  "    pm.expect(body.user).to.include.all.keys('id', 'username', 'fullName');",
+                  "    pm.expect(body.user.username).to.eql('testuser');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Sensor Data",
+      "item": [
+        {
+          "name": "Get Latest Sensor Data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8888/api/sensor-data/latest",
+              "host": [
+                "http://localhost:8888"
+              ],
+              "path": [
+                "api",
+                "sensor-data",
+                "latest"
+              ]
+            },
+            "description": "Lấy giá trị mới nhất của nhiệt độ, độ ẩm và ánh sáng."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response has latest sensor fields', function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body).to.have.all.keys('temperature', 'humidity', 'light', 'createdAt');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Sensor Chart",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8888/api/sensor-data/chart",
+              "host": [
+                "http://localhost:8888"
+              ],
+              "path": [
+                "api",
+                "sensor-data",
+                "chart"
+              ]
+            },
+            "description": "Lấy tối đa 15 điểm gần nhất của từng loại cảm biến."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Chart contains three sensor arrays', function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.temperature).to.be.an('array');",
+                  "    pm.expect(body.humidity).to.be.an('array');",
+                  "    pm.expect(body.light).to.be.an('array');",
+                  "    pm.expect(body.temperature.length).to.be.at.most(15);",
+                  "    pm.expect(body.humidity.length).to.be.at.most(15);",
+                  "    pm.expect(body.light.length).to.be.at.most(15);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get All Sensor History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8888/api/sensor-data/history?page=0&size=10&sortBy=time&sortDirection=desc",
+              "host": [
+                "http://localhost:8888"
+              ],
+              "path": [
+                "api",
+                "sensor-data",
+                "history"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "time"
+                },
+                {
+                  "key": "sortDirection",
+                  "value": "desc"
+                }
+              ]
+            },
+            "description": "Không truyền searchBy và value để lấy toàn bộ lịch sử."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response has pagination fields', function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.content).to.be.an('array');",
+                  "    pm.expect(body).to.include.all.keys('page', 'size', 'totalElements', 'totalPages', 'first', 'last', 'numberOfElements', 'empty');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Search Sensor History By Type",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8888/api/sensor-data/history?searchBy=temperature&page=0&size=10&sortBy=time&sortDirection=desc",
+              "host": [
+                "http://localhost:8888"
+              ],
+              "path": [
+                "api",
+                "sensor-data",
+                "history"
+              ],
+              "query": [
+                {
+                  "key": "searchBy",
+                  "value": "temperature",
+                  "description": "temperature, humidity hoặc light"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "time"
+                },
+                {
+                  "key": "sortDirection",
+                  "value": "desc"
+                }
+              ]
+            },
+            "description": "Chỉ truyền searchBy để lấy tất cả bản ghi thuộc loại cảm biến đã chọn."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('All returned records match sensor type', function () {",
+                  "    const body = pm.response.json();",
+                  "    const expected = 'TEMPERATURE';",
+                  "    body.content.forEach(item => pm.expect(item.sensorType).to.eql(expected));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Search Sensor History By Type And Value",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8888/api/sensor-data/history?searchBy=temperature&value=28.5&page=0&size=10&sortBy=time&sortDirection=desc",
+              "host": [
+                "http://localhost:8888"
+              ],
+              "path": [
+                "api",
+                "sensor-data",
+                "history"
+              ],
+              "query": [
+                {
+                  "key": "searchBy",
+                  "value": "temperature"
+                },
+                {
+                  "key": "value",
+                  "value": "28.5"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "time"
+                },
+                {
+                  "key": "sortDirection",
+                  "value": "desc"
+                }
+              ]
+            },
+            "description": "Lọc chính xác theo loại cảm biến và giá trị."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Returned records match type and value', function () {",
+                  "    const body = pm.response.json();",
+                  "    const expectedType = 'TEMPERATURE';",
+                  "    const expectedValue = 28.5;",
+                  "    body.content.forEach(item => {",
+                  "        pm.expect(item.sensorType).to.eql(expectedType);",
+                  "        pm.expect(item.value).to.eql(expectedValue);",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Search Sensor History By Time",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8888/api/sensor-data/history?searchBy=time&value=2026-08&page=0&size=10&sortBy=time&sortDirection=desc",
+              "host": [
+                "http://localhost:8888"
+              ],
+              "path": [
+                "api",
+                "sensor-data",
+                "history"
+              ],
+              "query": [
+                {
+                  "key": "searchBy",
+                  "value": "time"
+                },
+                {
+                  "key": "value",
+                  "value": "2026-08",
+                  "description": "yyyy, yyyy-MM, yyyy-MM-dd, yyyy-MM-dd HH, yyyy-MM-dd HH:mm hoặc yyyy-MM-dd HH:mm:ss"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "time"
+                },
+                {
+                  "key": "sortDirection",
+                  "value": "desc"
+                }
+              ]
+            },
+            "description": "Đổi biến timeSearchValue để thử tìm theo năm, tháng, ngày, giờ, phút hoặc giây."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response is paginated', function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.content).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Devices",
+      "item": [
+        {
+          "name": "Get Device Statuses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8888/api/devices/status",
+              "host": [
+                "http://localhost:8888"
+              ],
+              "path": [
+                "api",
+                "devices",
+                "status"
+              ]
+            },
+            "description": "Lấy trạng thái ON/OFF hiện tại của tất cả thiết bị."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response is a device array', function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body).to.be.an('array');",
+                  "    body.forEach(item => pm.expect(item).to.include.all.keys('deviceId', 'status'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Control Device",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"ON\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8888/api/devices/1/control",
+              "host": [
+                "http://localhost:8888"
+              ],
+              "path": [
+                "api",
+                "devices",
+                "1",
+                "control"
+              ]
+            },
+            "description": "Tạo action_history trạng thái LOADING cho user đang đăng nhập và publish MQTT. Cần dán access token vào Authorization của collection trước khi chạy."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Control response is LOADING', function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.deviceId).to.eql(1);",
+                  "    pm.expect(body.status).to.eql('LOADING');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Device Action History",
+      "item": [
+        {
+          "name": "Get All Device Action History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8888/api/device-action/history?page=0&size=10&sortBy=time&sortDirection=desc",
+              "host": [
+                "http://localhost:8888"
+              ],
+              "path": [
+                "api",
+                "device-action",
+                "history"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "time"
+                },
+                {
+                  "key": "sortDirection",
+                  "value": "desc"
+                }
+              ]
+            },
+            "description": "Lấy toàn bộ lịch sử điều khiển có phân trang."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response has pagination fields', function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.content).to.be.an('array');",
+                  "    pm.expect(body).to.include.all.keys('page', 'size', 'totalElements', 'totalPages', 'first', 'last', 'numberOfElements', 'empty');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Filter Device Action History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8888/api/device-action/history?deviceId=1&action=ON&status=ON&page=0&size=10&sortBy=time&sortDirection=desc",
+              "host": [
+                "http://localhost:8888"
+              ],
+              "path": [
+                "api",
+                "device-action",
+                "history"
+              ],
+              "query": [
+                {
+                  "key": "deviceId",
+                  "value": "1"
+                },
+                {
+                  "key": "action",
+                  "value": "ON",
+                  "description": "ON hoặc OFF"
+                },
+                {
+                  "key": "status",
+                  "value": "ON",
+                  "description": "LOADING, ON, OFF hoặc FAILED"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "time"
+                },
+                {
+                  "key": "sortDirection",
+                  "value": "desc"
+                }
+              ]
+            },
+            "description": "Các điều kiện deviceId, action và status được kết hợp bằng AND. Có thể tắt từng query parameter trong Postman để thử riêng."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Returned records match filters', function () {",
+                  "    const body = pm.response.json();",
+                  "    body.content.forEach(item => {",
+                  "        pm.expect(item.action).to.eql('ON');",
+                  "        pm.expect(item.status).to.eql('ON');",
+                  "        pm.expect(item).to.include.all.keys('id', 'userName', 'deviceName', 'createdAt');",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Search Device Action History By Time",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8888/api/device-action/history?time=2026-08&page=0&size=10&sortBy=time&sortDirection=desc",
+              "host": [
+                "http://localhost:8888"
+              ],
+              "path": [
+                "api",
+                "device-action",
+                "history"
+              ],
+              "query": [
+                {
+                  "key": "time",
+                  "value": "2026-08",
+                  "description": "yyyy, yyyy-MM, yyyy-MM-dd, yyyy-MM-dd HH, yyyy-MM-dd HH:mm hoặc yyyy-MM-dd HH:mm:ss"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "time"
+                },
+                {
+                  "key": "sortDirection",
+                  "value": "desc"
+                }
+              ]
+            },
+            "description": "Đổi biến timeSearchValue để thử tìm theo năm, tháng, ngày, giờ, phút hoặc giây."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response is paginated', function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.content).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Validation Examples",
+      "item": [
+        {
+          "name": "Sensor Value Without SearchBy - Expect 400",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8888/api/sensor-data/history?value=28.5",
+              "host": [
+                "http://localhost:8888"
+              ],
+              "path": [
+                "api",
+                "sensor-data",
+                "history"
+              ],
+              "query": [
+                {
+                  "key": "value",
+                  "value": "28.5"
+                }
+              ]
+            },
+            "description": "Có value nhưng không có searchBy phải bị từ chối."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 400', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Invalid Sensor Time - Expect 400",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8888/api/sensor-data/history?searchBy=time&value=2026-13",
+              "host": [
+                "http://localhost:8888"
+              ],
+              "path": [
+                "api",
+                "sensor-data",
+                "history"
+              ],
+              "query": [
+                {
+                  "key": "searchBy",
+                  "value": "time"
+                },
+                {
+                  "key": "value",
+                  "value": "2026-13"
+                }
+              ]
+            },
+            "description": "Tháng không hợp lệ phải trả 400."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 400', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Invalid Device History Time - Expect 400",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8888/api/device-action/history?time=2026-02-30",
+              "host": [
+                "http://localhost:8888"
+              ],
+              "path": [
+                "api",
+                "device-action",
+                "history"
+              ],
+              "query": [
+                {
+                  "key": "time",
+                  "value": "2026-02-30"
+                }
+              ]
+            },
+            "description": "Ngày không tồn tại phải trả 400."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 400', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

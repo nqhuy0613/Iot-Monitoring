@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>IoT Monitoring System - Sensor Data</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body data-page="sensor-data">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-profile">
+        <div class="avatar"><img src="assets/images/nguyen-quang-huy-avatar.png" alt="Ảnh đại diện người dùng"></div>
+        <p class="sidebar-name" data-user-name>Nguyễn Quang Huy</p>
+        <a class="profile-link" href="profile.html">View Profile</a>
+      </div>
+      <nav class="sidebar-nav" aria-label="Primary">
+        <a class="nav-item" href="dashboard.html"><i class="bx bx-grid-alt icon-sm"></i><span class="nav-label">Dashboard</span></a>
+        <a class="nav-item active" href="sensor-data.html"><i class="bx bx-data icon-sm"></i><span class="nav-label">Sensor Data</span></a>
+        <a class="nav-item" href="device-history.html"><i class="bx bx-history icon-sm"></i><span class="nav-label">Device History</span></a>
+      </nav>
+      <button class="logout-link" type="button" data-logout><i class="bx bx-log-out icon-sm"></i><span class="nav-label">Logout</span></button>
+    </aside>
+
+    <main class="content">
+      <h1 class="page-title">Sensor Data</h1>
+      <section class="card data-card">
+        <form id="sensor-filter-form" class="filter-row">
+          <input id="sensor-search-value" class="control" type="text" placeholder="Nhập giá trị cần tìm..." aria-label="Giá trị tìm kiếm">
+          <select id="sensor-search-by" class="select-control" aria-label="Loại tìm kiếm">
+            <option value="">Tất cả</option><option value="time">Thời gian</option><option value="temperature">Nhiệt độ</option><option value="humidity">Độ ẩm</option><option value="light">Ánh sáng</option>
+          </select>
+          <button class="search-button" type="submit"><i class="bx bx-search icon-sm"></i>Search</button>
+          <div class="sort-control">
+            <div class="sort-button"><i class="bx bx-sort-alt-2 icon-sm"></i><span>Sort</span></div>
+            <select id="sensor-sort" class="sort-select" aria-label="Sắp xếp dữ liệu cảm biến">
+              <option value="id:asc">ID: Tăng dần</option>
+              <option value="id:desc">ID: Giảm dần</option>
+              <option value="time:asc">Thời gian: Tăng dần</option>
+              <option value="time:desc" selected>Thời gian: Giảm dần</option>
+            </select>
+          </div>
+        </form>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <colgroup><col style="width:8%"><col style="width:24%"><col style="width:20%"><col style="width:48%"></colgroup>
+            <thead><tr><th>ID</th><th>Loại cảm biến</th><th>Giá trị</th><th>Thời gian</th></tr></thead>
+            <tbody id="sensor-history-body"><tr><td colspan="4" class="empty-cell">Đang tải dữ liệu...</td></tr></tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <label class="page-size-control">Số dòng / trang:
+            <select id="sensor-page-size" class="page-size-select"><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option><option value="50">50</option></select>
+          </label>
+          <div id="sensor-pagination" class="page-buttons"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="js/core/config.js"></script>
+  <script src="js/core/session.js"></script>
+  <script src="js/core/api.js"></script>
+  <script src="js/core/ui.js"></script>
+  <script src="js/pages/sensor-history.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

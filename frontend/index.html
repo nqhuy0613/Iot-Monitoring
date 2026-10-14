@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>IoT Monitoring System - Login</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body class="login-page" data-page="login">
+  <main class="login-shell">
+    <h1 class="login-title">IoT Monitoring System</h1>
+    <p class="login-subtitle">Login to your account</p>
+
+    <form id="login-form" class="login-card" aria-label="Login form" novalidate>
+      <div class="form-field">
+        <label class="form-label" for="username">Username</label>
+        <div class="input-wrap">
+          <span class="leading-icon" aria-hidden="true"><i class="bx bx-user icon-sm"></i></span>
+          <input class="form-input" id="username" name="username" type="text" autocomplete="username" placeholder="Enter your username" required>
+        </div>
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="password">Password</label>
+        <div class="input-wrap">
+          <span class="leading-icon" aria-hidden="true"><i class="bx bx-lock-alt icon-sm"></i></span>
+          <input class="form-input" id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required>
+          <button id="password-toggle" class="password-toggle trailing-icon" type="button" aria-label="Hiện mật khẩu"><i class="bx bx-show icon-sm"></i></button>
+        </div>
+      </div>
+      <div class="login-meta">
+        <label class="remember"><input id="remember-me" type="checkbox"> <span>Remember me</span></label>
+        <button class="forgot link-button" type="button" data-toast="Vui lòng liên hệ quản trị viên để đặt lại mật khẩu.">Forgot password?</button>
+      </div>
+      <p id="login-error" class="form-error" role="alert"></p>
+      <button id="login-button" class="login-button" type="submit">Login</button>
+    </form>
+    <footer class="login-footer">© 2026 IoT Monitoring System. All rights reserved.</footer>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="js/core/config.js"></script>
+  <script src="js/core/session.js"></script>
+  <script src="js/core/api.js"></script>
+  <script src="js/core/ui.js"></script>
+  <script src="js/pages/login.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

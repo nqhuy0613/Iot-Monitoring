@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>IoT Monitoring System - Profile</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body data-page="profile">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-profile">
+        <div class="avatar"><img src="assets/images/nguyen-quang-huy-avatar.png" alt="Ảnh đại diện người dùng"></div>
+        <p class="sidebar-name" data-user-name>Nguyễn Quang Huy</p>
+        <a class="profile-link" href="profile.html">View Profile</a>
+      </div>
+      <nav class="sidebar-nav" aria-label="Primary">
+        <a class="nav-item" href="dashboard.html"><i class="bx bx-grid-alt icon-sm"></i><span class="nav-label">Dashboard</span></a>
+        <a class="nav-item" href="sensor-data.html"><i class="bx bx-data icon-sm"></i><span class="nav-label">Sensor Data</span></a>
+        <a class="nav-item" href="device-history.html"><i class="bx bx-history icon-sm"></i><span class="nav-label">Device History</span></a>
+      </nav>
+      <button class="logout-link" type="button" data-logout><i class="bx bx-log-out icon-sm"></i><span class="nav-label">Logout</span></button>
+    </aside>
+
+    <main class="content profile-content">
+      <h1 class="page-title">View Profile</h1>
+      <div class="profile-card-wrap">
+        <section class="card profile-card">
+          <div class="profile-avatar-large"><img src="assets/images/nguyen-quang-huy-avatar.png" alt="Ảnh đại diện người dùng"></div>
+          <h2 class="profile-card-title" data-user-name>Nguyễn Quang Huy</h2>
+          <p class="profile-card-subtitle">IoT Enthusiast &amp; Developer</p>
+          <div class="profile-divider"></div>
+          <div class="social-list">
+            <a class="social-link" href="https://github.com/" target="_blank" rel="noopener noreferrer"><span class="social-icon github"><i class="bx bxl-github icon-sm"></i></span><span>github.com</span><span class="external-icon">↗</span></a>
+            <a class="social-link" href="https://www.figma.com/design/L7MloNMSuryl8pmsSF4s1T/Untitled?node-id=0-1&amp;p=f&amp;m=draw" target="_blank" rel="noopener noreferrer"><span class="social-icon figma"><i class="bx bxl-figma icon-sm"></i></span><span>figma.com</span><span class="external-icon">↗</span></a>
+            <a class="social-link" href="https://qhuy061305-7887111.postman.co/workspace/java~0c46b35c-63ec-4e3f-a8f7-edcb66871da2/collection/47657921-9a16a92f-1f34-424f-89ba-e139eaa37083?action=share&source=copy-link&creator=47657921" target="_blank" rel="noopener noreferrer"><span class="social-icon postman"><i class="bx bx-rocket icon-sm"></i></span><span>postman.com</span><span class="external-icon">↗</span></a>
+            <a class="social-link" href="https://drive.google.com/file/d/1vw2P1eGt9-0gu1Z6HPf-vKqOHu0k2124/view?usp=sharing" target="_blank" rel="noopener noreferrer"><span class="social-icon drive"><i class="bx bxs-file-doc icon-sm"></i></span><span>drive.google.com</span><span class="external-icon">↗</span></a>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="js/core/config.js"></script>
+  <script src="js/core/session.js"></script>
+  <script src="js/core/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
