@@ -121,9 +121,45 @@ class SensorHistoryServiceTest {
     }
 
     @Test
-    void rejectsValueWithoutSearchBy() {
+    void acceptsNumericValueWithoutSearchBy() {
         SensorHistoryFilterRequest filter = new SensorHistoryFilterRequest();
         filter.setValue("28.5");
+
+        when(sensorDataRepository.findAll(
+                org.mockito.ArgumentMatchers.<Specification<SensorData>>any(),
+                any(Pageable.class)
+        )).thenReturn(new PageImpl<>(List.of()));
+
+        sensorDataService.getSensorDataHistory(filter);
+
+        verify(sensorDataRepository).findAll(
+                org.mockito.ArgumentMatchers.<Specification<SensorData>>any(),
+                any(Pageable.class)
+        );
+    }
+
+    @Test
+    void acceptsTimeValueWithoutSearchBy() {
+        SensorHistoryFilterRequest filter = new SensorHistoryFilterRequest();
+        filter.setValue("2026-08-15 11:20");
+
+        when(sensorDataRepository.findAll(
+                org.mockito.ArgumentMatchers.<Specification<SensorData>>any(),
+                any(Pageable.class)
+        )).thenReturn(new PageImpl<>(List.of()));
+
+        sensorDataService.getSensorDataHistory(filter);
+
+        verify(sensorDataRepository).findAll(
+                org.mockito.ArgumentMatchers.<Specification<SensorData>>any(),
+                any(Pageable.class)
+        );
+    }
+
+    @Test
+    void rejectsUnsupportedValueWithoutSearchBy() {
+        SensorHistoryFilterRequest filter = new SensorHistoryFilterRequest();
+        filter.setValue("not-a-number-or-time");
 
         assertThrows(
                 ResponseStatusException.class,

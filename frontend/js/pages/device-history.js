@@ -1,6 +1,7 @@
 "use strict";
 
 function initializeDeviceHistory() {
+  bindTimeCopyButtons($("#device-history-body"));
   $("#device-history-filter-form").addEventListener("submit", event => {
     event.preventDefault();
     appState.historyPage = 0;
@@ -38,7 +39,7 @@ async function loadDeviceHistory() {
     appState.historyTotalPages = data.totalPages || 0;
     body.innerHTML = data.content?.length ? data.content.map(item => `<tr>
       <td>${item.id}</td><td class="device-name-cell">${escapeHtml(item.deviceName)}</td><td class="${item.action === "ON" ? "action-on" : "action-off"}">${escapeHtml(item.action)}</td>
-      <td><span class="badge ${String(item.status).toLowerCase()}">${escapeHtml(item.status)}</span></td><td>${escapeHtml(item.userName)}</td><td>${formatDateTime(item.createdAt)}</td>
+      <td><span class="badge ${String(item.status).toLowerCase()}">${escapeHtml(item.status)}</span></td><td>${escapeHtml(item.userName)}</td><td>${renderCopyableTime(item.createdAt)}</td>
     </tr>`).join("") : emptyRow(6, "Không có lịch sử điều khiển phù hợp.");
     renderPagination("history-pagination", appState.historyPage, appState.historyTotalPages, page => {
       appState.historyPage = page;

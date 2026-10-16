@@ -1,5 +1,6 @@
 "use strict";
 
+// khởi động và điều hướng logic từng trang
 document.addEventListener("DOMContentLoaded", initializePage);
 
 function initializePage() {

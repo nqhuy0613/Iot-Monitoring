@@ -8,9 +8,13 @@ import iot.backend.iotmonitoring.enums.SensorType;
 import iot.backend.iotmonitoring.util.PartialDateTimeRangeParser;
 import iot.backend.iotmonitoring.util.PartialDateTimeRangeParser.DateTimeRange;
 import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class SensorDataSpecification {
 
@@ -24,10 +28,7 @@ public final class SensorDataSpecification {
         String value = trimToNull(filter.getValue());
 
         if (searchBy == null) {
-            if (value != null) {
-                throw badRequest("searchBy is required when value is provided");
-            }
-            return allSensorData();
+            return value == null ? allSensorData() : valueOrCreatedAtMatches(value);
         }
 
         SensorHistorySearchField searchField =
@@ -83,11 +84,61 @@ public final class SensorDataSpecification {
         );
     }
 
+    private static Specification<SensorData> valueOrCreatedAtMatches(String value) {
+        Double sensorValue = tryParseSensorValue(value);
+        DateTimeRange timeRange = tryParseDateTimeRange(value);
+
+        if (sensorValue == null && timeRange == null) {
+            throw badRequest(
+                    "value must be a number or use a supported time format"
+            );
+        }
+
+        return (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (sensorValue != null) {
+                predicates.add(criteriaBuilder.equal(root.get("value"), sensorValue));
+            }
+
+            if (timeRange != null) {
+                predicates.add(criteriaBuilder.and(
+                        criteriaBuilder.greaterThanOrEqualTo(
+                                root.get("createdAt"),
+                                timeRange.startInclusive()
+                        ),
+                        criteriaBuilder.lessThan(
+                                root.get("createdAt"),
+                                timeRange.endExclusive()
+                        )
+                ));
+            }
+
+            return criteriaBuilder.or(predicates.toArray(Predicate[]::new));
+        };
+    }
+
     private static Double parseSensorValue(String value) {
         try {
             return Double.valueOf(value);
         } catch (NumberFormatException exception) {
             throw badRequest("value must be a number when searching by sensor type");
+        }
+    }
+
+    private static Double tryParseSensorValue(String value) {
+        try {
+            return Double.valueOf(value);
+        } catch (NumberFormatException exception) {
+            return null;
+        }
+    }
+
+    private static DateTimeRange tryParseDateTimeRange(String value) {
+        try {
+            return PartialDateTimeRangeParser.parse(value);
+        } catch (ResponseStatusException exception) {
+            return null;
         }
     }
 

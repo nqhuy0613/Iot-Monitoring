@@ -676,6 +676,42 @@ svg {
   font-weight: 700;
 }
 
+.time-cell-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.time-copy-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: #6f8397;
+  cursor: pointer;
+}
+
+.time-copy-button:hover,
+.time-copy-button:focus-visible {
+  background: #eaf4fc;
+  color: #3182c7;
+}
+
+.time-copy-button:focus-visible {
+  outline: 2px solid #79aee0;
+  outline-offset: 1px;
+}
+
+.time-copy-button i {
+  font-size: 14px;
+}
+
 .action-on {
   color: var(--success) !important;
   font-weight: 800;
